@@ -3,6 +3,7 @@
 #include<vector>
 #include<numeric>
 #include<algorithm>
+#include<complex>
 using namespace std;
 
 /**
@@ -209,6 +210,31 @@ vector<double> convolution_output_side(vector<T1> X,vector<T2> H){
 }
 
 
+/**
+ * @description: 
+ * @param {vector<complex<double>>} arr
+ * @param {int} N 取复数数组的前N个采样点
+ * @return {*}
+ */
+vector<complex<double>> DFT(vector<complex<double>> arr,int N){
+    vector<complex<double>> res(N);
+    complex<double> temp{0, 0};
+    for (int k = 0; k < N;k++){
+        res[k].imag(0);
+        res[k].real(0);
+        for (int i = 0; i < N;i++){
+            temp.real(cos(2*M_PI*k*i/N));
+            temp.imag(-sin(2*M_PI*k*i/N));
+            res[k] += arr[i] * temp;
+            // res[k].real(res[k].real() + arr[i].real() * temp.real()-arr[i].imag()*temp.imag());
+            // res[k].imag(res[k].imag() + arr[i].real() * temp.imag()+arr[i].imag()*temp.real());
+        }
+    }
+    return res;
+}
+
+
+
 int main(){
     vector<double> x,x_part;
     x = create_sin_arr(1,220, 0,4410,2000);
@@ -221,7 +247,7 @@ int main(){
     // MV_cal(x);
 
     /********************exp0.创建正弦波数据*************************/
-    // x = create_sin_arr(1,220, 0,4410,2000);
+    // x = create_sin_arr(1,220, 0,4400,2000);
     // vector_show(x);
     /********************exp0.创建正弦波数据*************************/
 
@@ -243,14 +269,26 @@ int main(){
 
 
     /********************exp3.卷积*************************/
-    vector<double> X={0, -1, -1.3, 2, 1.4, 1.4, 0.6, 0, -0.6};
-    vector<double> H={1, -0.5, -0.3, -0.2};
-    vector<double> Y;
-    Y = convolution_input_side(X, H);
-    vector_show(Y);
-    Y = convolution_output_side(X, H);
-    vector_show(Y);
+    // vector<double> X={0, -1, -1.3, 2, 1.4, 1.4, 0.6, 0, -0.6};
+    // vector<double> H={1, -0.5, -0.3, -0.2};
+    // vector<double> Y;
+    // Y = convolution_input_side(X, H);
+    // vector_show(Y);
+    // Y = convolution_output_side(X, H);
+    // vector_show(Y);
     /********************exp3.卷积*************************/
+
+    /********************exp4.dft*************************/
+    
+    vector<complex<double>> arr(10),res(10);
+    for (int i = 0; i < 10;i++){
+        arr[i].real(i);
+        arr[i].imag(0);
+    }
+    vector_show(arr);
+    res = DFT(arr,10);
+    vector_show(res);
+    /********************exp4.dft*************************/
     system("pause");
     return 0;
 }
