@@ -217,23 +217,38 @@ vector<double> convolution_output_side(vector<T1> X,vector<T2> H){
  * @return {*}
  */
 vector<complex<double>> DFT(vector<complex<double>> arr,int N){
-    vector<complex<double>> res(N);
+    vector<complex<double>> ret(N);
     complex<double> temp{0, 0};
     for (int k = 0; k < N;k++){
-        res[k].imag(0);
-        res[k].real(0);
+        ret[k].imag(0);
+        ret[k].real(0);
         for (int i = 0; i < N;i++){
             temp.real(cos(2*M_PI*k*i/N));
             temp.imag(-sin(2*M_PI*k*i/N));
-            res[k] += arr[i] * temp;
-            // res[k].real(res[k].real() + arr[i].real() * temp.real()-arr[i].imag()*temp.imag());
-            // res[k].imag(res[k].imag() + arr[i].real() * temp.imag()+arr[i].imag()*temp.real());
+            ret[k] += arr[i] * temp;
+            // ret[k].real(ret[k].real() + arr[i].real() * temp.real()-arr[i].imag()*temp.imag());
+            // ret[k].imag(ret[k].imag() + arr[i].real() * temp.imag()+arr[i].imag()*temp.real());
         }
     }
-    return res;
+    return ret;
 }
 
-
+vector<complex<double>> IDFT(vector<complex<double>> arr,int N){
+    vector<complex<double>> ret(N);
+    complex<double> temp{0, 0};
+    for (int k = 0; k < N;k++){
+        ret[k].imag(0);
+        ret[k].real(0);
+        for (int i = 0; i < N;i++){
+            temp.real(cos(2*M_PI*k*i/N));
+            temp.imag(sin(2*M_PI*k*i/N));
+            ret[k] += arr[i] * temp;
+        }
+        ret[k].real(ret[k].real()/N);
+        ret[k].imag(ret[k].imag()/N);
+    }
+    return ret;
+}
 
 int main(){
     vector<double> x,x_part;
@@ -280,14 +295,19 @@ int main(){
 
     /********************exp4.dft*************************/
     
-    vector<complex<double>> arr(10),res(10);
+    vector<complex<double>> arr(10),res1(10),res2(10);
     for (int i = 0; i < 10;i++){
         arr[i].real(i);
         arr[i].imag(0);
     }
+    cout << endl << "生成从0到9的复数数组：";
     vector_show(arr);
-    res = DFT(arr,10);
-    vector_show(res);
+    res1 = DFT(arr,10);
+    cout << endl << "dft后：";
+    vector_show(res1);
+    res2 = IDFT(res1,10);
+    cout << endl << "idft后：";
+    vector_show(res2);
     /********************exp4.dft*************************/
     system("pause");
     return 0;
