@@ -20,6 +20,19 @@ void vector_show(vector<T> const& arr){
     cout << endl;
 }
 
+template <typename T>
+vector<T> operator+(const vector<T>& src1, const vector<T>& src2){
+    int max_size;
+    src1.size() > src2.size() ? src2.resize(src1.size(),0)
+                              : src1.resize(src2.size(),0);
+    max_size = src1.size();
+
+    vector<T> dst(max_size,0);
+    for (int i = 0; i < max_size;i++){
+        dst[i] = src1[i] + src2[i];
+    }
+    return dst;
+}
 
 
 /**
