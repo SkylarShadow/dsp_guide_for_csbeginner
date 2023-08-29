@@ -18,22 +18,55 @@ void vector_show(vector<T> const& arr){
     }
     cout << "]";
     cout << endl;
+    
+}
+
+
+
+void vector_complex_real_show(vector<complex<double>> const& src){
+    cout << "[";
+    for (complex<double> it : src) {
+        cout << it.real() <<", ";
+    }
+    cout << "]";
+    cout << endl;
+    
 }
 
 template <typename T>
 vector<T> operator+(const vector<T>& src1, const vector<T>& src2){
     int max_size;
-    src1.size() > src2.size() ? src2.resize(src1.size(),0)
-                              : src1.resize(src2.size(),0);
-    max_size = src1.size();
-
+    max_size = src1.size() > src2.size() ? src1.size() : src2.size();
     vector<T> dst(max_size,0);
     for (int i = 0; i < max_size;i++){
-        dst[i] = src1[i] + src2[i];
+        if(i<src1.size()&&i<src2.size()){
+            dst[i] = src1[i] + src2[i];
+        }
+        else if(i>=src1.size()&&i<src2.size()){
+            dst[i] = src2[i];
+        }else if(i<src1.size()&&i>=src2.size()){
+            dst[i] = src1[i];
+        }
     }
     return dst;
 }
 
+vector<complex<double>> real_to_complex(vector<double> const& src){
+    vector<complex<double>> dst(src.size());
+    for (int i = 0; i < src.size(); i++){
+        dst[i].real(src[i]);
+        dst[i].imag(0);
+    }
+    return dst;
+}
+
+vector<double> complex_realpart_to_real(vector<complex<double>> const& src){
+    vector<double> dst(src.size());
+    for (int i = 0; i < src.size(); i++){
+        dst[i]=src[i].real();
+    }
+    return dst;
+}
 
 /**
  * @description: 创建正弦波
@@ -308,20 +341,36 @@ int main(){
 
     /********************exp4.dft*************************/
     
-    vector<complex<double>> arr(10),res1(10),res2(10);
-    for (int i = 0; i < 10;i++){
-        arr[i].real(i);
-        arr[i].imag(0);
-    }
-    cout << endl << "生成从0到9的复数数组：";
-    vector_show(arr);
-    res1 = DFT(arr,10);
-    cout << endl << "dft后：";
-    vector_show(res1);
-    res2 = IDFT(res1,10);
-    cout << endl << "idft后：";
-    vector_show(res2);
+    // vector<complex<double>> arr(10),res1(10),res2(10);
+    // for (int i = 0; i < 10;i++){
+    //     arr[i].real(i);
+    //     arr[i].imag(0);
+    // }
+    // cout << endl << "生成从0到9的复数数组：";
+    // vector_show(arr);
+    // res1 = DFT(arr,10);
+    // cout << endl << "dft后：";
+    // vector_show(res1);
+    // res2 = IDFT(res1,10);
+    // cout << endl << "idft后：";
+    // vector_show(res2);
     /********************exp4.dft*************************/
+
+
+    /********************exp6.ft properties*************************/
+
+    // 验证可加性和齐次性
+
+    vector<double> x1,x2,x3;
+    x1 = create_sin_arr(1,220, 0,22050,1000);
+    x2 = create_sin_arr(1,330, 0,22050,1000);
+    x3 = x1 + x2;
+    // vector_show(x3);
+    cout << endl;
+    vector_complex_real_show(IDFT(DFT(real_to_complex(x1) + real_to_complex(x2),4410),4410));
+
+
+    /********************exp6.ft properties*************************/
     system("pause");
     return 0;
 }
